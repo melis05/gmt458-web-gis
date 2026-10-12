@@ -1,40 +1,27 @@
 # GMT 458 - Web GIS Assignment 1: Personal Web Page
 
-A personal web page with a pixel-art theme, built with HTML, CSS, Leaflet, and OpenLayers.
+A personal portfolio web page with a pixel-art theme, built with HTML, CSS, JavaScript, Leaflet, and OpenLayers.
 
 ## Pages
-- `index.html`: Home page (About Me, Experiences, Skills, Languages, Maps, Contact)
-- `projects.html`: Projects showcase table with images and descriptions
-- `maps.html`: Interactive web GIS map interface featuring both Leaflet and OpenLayers in a unified tabbed view, focused on Hacettepe University Beytepe Campus with custom pins and popups.
+- `index.html`: Home page (Pixel-art intro animation, About Me, Experiences, Skills, Languages, Contact)
+- `projects.html`: Projects showcase table with images, descriptions, and technology stacks
+- `maps.html`: Interactive Web GIS interface featuring both Leaflet and OpenLayers centered on Hacettepe University Beytepe Campus ("You can find me here")
 
-## Features & Assignment Objectives
-
-### 1. HTTP 403 Access Blocked Error Fix
-- **Root Cause:** The default `tile.openstreetmap.org` tile server requires a valid HTTP `Referer` header according to the OpenStreetMap Tile Usage Policy. When opening HTML files locally via the `file:///` protocol, browsers do not send a Referer header, causing OSM to return `HTTP 403 Forbidden (Access Blocked)`.
-- **Solution:** Switched the tile layers to CARTO Voyager (`https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png`). It serves open OpenStreetMap data through a global CDN without blocking local `file:///` requests, localhost servers, or GitHub Pages.
-
-### 2. Location & Marker
-- Maps are centered on **Hacettepe University Beytepe Campus** (`[39.8655, 32.7338]`).
-- Features a custom pixel-styled pin with a floating bubble displaying **"Beni burada bulabilirsiniz"** directly above the marker, along with detailed popups on click.
-
-### 3. Solved Issues
-- **Issue 1 (Zoom Threshold / Overlapping Markers):**
-  - *Leaflet:* Managed via `L.layerGroup()` and `map.on('zoomend')`. Markers only render when the zoom level is $\ge 12$. A live zoom indicator informs the user of the current zoom and visibility state.
-  - *OpenLayers:* Implemented using `minZoom: 12` on `ol.layer.Vector` and synchronized with an overlay display check on `change:resolution`.
-- **Issue 2 (Preventing World from Repeating):**
-  - *Leaflet:* Configured with `minZoom: 2`, `maxBounds: [[-90, -180], [90, 180]]`, `maxBoundsViscosity: 1.0`, and `noWrap: true` on the tile layer.
-  - *OpenLayers:* Configured with `wrapX: false` on the tile source, `minZoom: 2`, and an extent constraint (`extent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34]`) on the view.
+## Solved Issues & Features
+- **Issue 1 (Zoom Threshold):** Markers only render at zoom level 12 and above to prevent clutter and overlap.
+- **Issue 2 (Repeating Earth):** Prevented map replication horizontally using `noWrap: true`, `maxBounds`, and `minZoom: 2` in Leaflet, and `wrapX: false` with view `extent` in OpenLayers.
+- **Single Map Experience:** Unified both map engines inside interactive tabs allowing seamless toggling.
 
 ## What I Learned from AI
-- Diagnosing and resolving the OSM 403 Access Blocked policy issue caused by missing Referer headers on local `file:///` origins.
-- How to create a unified tabbed map interface supporting both Leaflet and OpenLayers without tile distortion using `map.invalidateSize()` and `olMap.updateSize()`.
-- Managing zoom thresholds dynamically across both Leaflet (`L.layerGroup` add/remove) and OpenLayers (`minZoom` vector layer configuration).
-- Implementing bounding constraints (`noWrap`, `maxBounds`, `wrapX: false`, and `extent`) to avoid world replication.
+- Diagnosed and resolved the OpenStreetMap 403 Access Blocked / Forbidden tile error (caused by missing `Referer` headers when browsing via local `file:///` scheme; fixed via local server and GitHub Pages hosting).
+- Techniques to avoid world repetition across Web GIS libraries (`noWrap`, `maxBounds` in Leaflet; `wrapX: false` and coordinate `extent` in OpenLayers).
+- Implementing marker visibility thresholds based on dynamic zoom level listeners (`zoomend` in Leaflet, `minZoom` on OpenLayers vector layers).
+- Structuring multi-map tab switching and canvas resizing (`invalidateSize` / `updateSize`).
 
 ## Estimated AI Usage
-About 2 hours
+About 1.5 hours
 
-## Sources & Credits
-- Pixel-art artwork generated with Gemini
-- Fonts: Press Start 2P and VT323 (Google Fonts)
-- Map Data: OpenStreetMap contributors & CARTO Basemaps
+## Sources
+- Pixel-art images generated with Gemini
+- Typography: Press Start 2P and VT323 (Google Fonts)
+- Map Data: OpenStreetMap contributors
