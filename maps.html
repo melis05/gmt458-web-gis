@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Melis - Maps</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <!-- OpenLayers CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v9.2.4/ol.css">
+
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .map-controls {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .map-tab-btn {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.75rem;
+      padding: 10px 18px;
+      background: #fffaf0;
+      border: 3px solid #000000;
+      box-shadow: 4px 4px 0 #d8a7b1;
+      cursor: pointer;
+    }
+    .map-tab-btn.active {
+      background: #000000;
+      color: #ffffff;
+      box-shadow: 2px 2px 0 #d8a7b1;
+      transform: translate(2px, 2px);
+    }
+    .map-card {
+      display: none;
+    }
+    .map-card.active {
+      display: block;
+    }
+    .badge-info {
+      font-size: 1.1rem;
+      margin: 10px 0;
+      background: #fffaf0;
+      padding: 8px 12px;
+      border: 2px solid #000000;
+      display: inline-block;
+    }
+    .ol-popup {
+      position: absolute;
+      background-color: white;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+      padding: 10px;
+      border-radius: 4px;
+      border: 2px solid #000;
+      bottom: 12px;
+      left: -50px;
+      min-width: 180px;
+      font-family: 'VT323', monospace;
+      font-size: 1.3rem;
+    }
+    .ol-popup:after, .ol-popup:before {
+      top: 100%;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+    }
+    .ol-popup:after {
+      border-top-color: white;
+      border-width: 10px;
+      left: 48px;
+      margin-left: -10px;
+    }
+  </style>
+</head>
+<body>
+  <nav class="menu">
+    <a href="index.html#about">About Me</a>
+    <a href="projects.html">Projects</a>
+    <a href="index.html#experiences">Experiences</a>
+    <a href="index.html#skills">Skills</a>
+    <a href="index.html#languages">Languages</a>
+    <a href="maps.html">Maps</a>
+    <a href="index.html#contact">Contact</a>
+  </nav>
+
+  <h1 style="text-align: center;">Interactive Map</h1>
+
+  <section class="section">
+    <!-- Map Switcher Controls -->
+    <div class="map-controls">
+      <button id="tabLeaflet" class="map-tab-btn active" onclick="showMap('leaflet')">Leaflet Map</button>
+      <button id="tabOl" class="map-tab-btn" onclick="showMap('ol')">OpenLayers Map</button>
+    </div>
+
+    <!-- Leaflet Card -->
+    <div id="cardLeaflet" class="map-card active">
+      <h2>Hacettepe University Beytepe Campus (Leaflet)</h2>
+      <div id="zoomInfo" class="badge-info">Zoom: 15</div>
+      <div id="leafletMap" style="height: 440px;"></div>
+    </div>
+
+    <!-- OpenLayers Card -->
+    <div id="cardOl" class="map-card">
+      <h2>Hacettepe University Beytepe Campus (OpenLayers)</h2>
+      <div id="olZoomInfo" class="badge-info">Zoom: 15</div>
+      <div id="olMap" style="height: 440px; position: relative;"></div>
+      <div id="olPopup" class="ol-popup">
+        <div id="olPopupContent"></div>
+      </div>
+    </div>
+  </section>
+
+  <a class="to-top" href="#top">&uarr; TOP</a>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ol@v9.2.4/dist/ol.js"></script>
+  
+  <script src="leaflet-map.js"></script>
+  <script src="ol-map.js"></script>
+
+  <script>
+    function showMap(engine) {
+      const cardLeaflet = document.getElementById('cardLeaflet');
+      const cardOl = document.getElementById('cardOl');
+      const tabLeaflet = document.getElementById('tabLeaflet');
+      const tabOl = document.getElementById('tabOl');
+
+      if (engine === 'leaflet') {
+        cardLeaflet.classList.add('active');
+        cardOl.classList.remove('active');
+        tabLeaflet.classList.add('active');
+        tabOl.classList.remove('active');
+        if (window.leafletMapInstance) {
+          setTimeout(() => { window.leafletMapInstance.invalidateSize(); }, 50);
+        }
+      } else {
+        cardOl.classList.add('active');
+        cardLeaflet.classList.remove('active');
+        tabOl.classList.add('active');
+        tabLeaflet.classList.remove('active');
+        if (window.olMapInstance) {
+          setTimeout(() => { window.olMapInstance.updateSize(); }, 50);
+        }
+      }
+    }
+  </script>
+</body>
+</html>
